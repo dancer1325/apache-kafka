@@ -21,45 +21,62 @@
      * possible use cases
        * high-throughput / support high volume event streams
          * _Example:_ real-time log aggregation
-       * TODO: deal gracefully with large data backlogs to be able to support periodic data loads from offline systems.
-       * It also meant the system would have to handle low-latency delivery to handle more traditional messaging use-cases.
-       * We wanted to support partitioned, distributed, real-time processing of these feeds to create new, derived feeds. This motivated our partitioning and consumer model.
-       * Finally in cases where the stream is fed into other data systems for serving, we knew the system would have to be able to guarantee fault-tolerance in the presence of machine failures.
-       * Supporting these uses led us to a design with a number of unique elements, more akin to a database log than a traditional messaging system. We will outline some elements of the design in the following sections.
+       * deal gracefully with large data backlogs / able to support periodic data loads -- from -- offline systems
+       * low-latency delivery -- to -- handle more traditional messaging use-cases
+       * partitioned, distributed, real-time processing of these feeds -- to create -- new, derived feeds
+         * -> partitioning and consumer model
+       * if stream -- is fed into -- OTHER data systems for serving -> should be fault-tolerance | machine failures
+   * 👀== unique elements / MORE related to a database log than a traditional messaging system 👀
 
 <h3 class="anchor-heading"><a id="persistence" class="anchor-link"></a><a href="#persistence">4.2 Persistence</a></h3>
-    <h4><a id="design_filesystem" href="#design_filesystem">Don't fear the filesystem!</a></h4>
+  <h4><a id="design_filesystem" href="#design_filesystem">Don't fear the filesystem!</a></h4>
     <p>
-    Kafka relies heavily on the filesystem for storing and caching messages. There is a general perception that "disks are slow" which makes people skeptical that a persistent structure can offer competitive performance.
-    In fact disks are both much slower and much faster than people expect depending on how they are used; and a properly designed disk structure can often be as fast as the network.
-    <p>
-    The key fact about disk performance is that the throughput of hard drives has been diverging from the latency of a disk seek for the last decade. As a result the performance of linear writes on a <a href="https://en.wikipedia.org/wiki/Non-RAID_drive_architectures">JBOD</a>
-    configuration with six 7200rpm SATA RAID-5 array is about 600MB/sec but the performance of random writes is only about 100k/sec&mdash;a difference of over 6000X. These linear reads and writes are the most
-    predictable of all usage patterns, and are heavily optimized by the operating system. A modern operating system provides read-ahead and write-behind techniques that prefetch data in large block multiples and
-    group smaller logical writes into large physical writes. A further discussion of this issue can be found in this <a href="https://queue.acm.org/detail.cfm?id=1563874">ACM Queue article</a>; they actually find that
-    <a href="https://deliveryimages.acm.org/10.1145/1570000/1563874/jacobs3.jpg">sequential disk access can in some cases be faster than random memory access!</a>
-    <p>
-    To compensate for this performance divergence, modern operating systems have become increasingly aggressive in their use of main memory for disk caching. A modern OS will happily divert <i>all</i> free memory to
-    disk caching with little performance penalty when the memory is reclaimed. All disk reads and writes will go through this unified cache. This feature cannot easily be turned off without using direct I/O, so even
-    if a process maintains an in-process cache of the data, this data will likely be duplicated in OS pagecache, effectively storing everything twice.
-    <p>
-    Furthermore, we are building on top of the JVM, and anyone who has spent any time with Java memory usage knows two things:
-    <ol>
-        <li>The memory overhead of objects is very high, often doubling the size of the data stored (or worse).</li>
-        <li>Java garbage collection becomes increasingly fiddly and slow as the in-heap data increases.</li>
-    </ol>
-    <p>
-    As a result of these factors using the filesystem and relying on pagecache is superior to maintaining an in-memory cache or other structure&mdash;we at least double the available cache by having automatic access
-    to all free memory, and likely double again by storing a compact byte structure rather than individual objects. Doing so will result in a cache of up to 28-30GB on a 32GB machine without GC penalties.
-    Furthermore, this cache will stay warm even if the service is restarted, whereas the in-process cache will need to be rebuilt in memory (which for a 10GB cache may take 10 minutes) or else it will need to start
-    with a completely cold cache (which likely means terrible initial performance). This also greatly simplifies the code as all logic for maintaining coherency between the cache and filesystem is now in the OS,
-    which tends to do so more efficiently and more correctly than one-off in-process attempts. If your disk usage favors linear reads then read-ahead is effectively pre-populating this cache with useful data on each
-    disk read.
-    <p>
-    This suggests a design which is very simple: rather than maintain as much as possible in-memory and flush it all out to the filesystem in a panic when we run out of space, we invert that. All data is immediately
-    written to a persistent log on the filesystem without necessarily flushing to disk. In effect this just means that it is transferred into the kernel's pagecache.
-    <p>
-    This style of pagecache-centric design is described in an <a href="https://varnish-cache.org/wiki/ArchitectNotes">article</a> on the design of Varnish here (along with a healthy dose of arrogance).
+* Kafka
+  * 👀uses the filesystem -- for -- storing and caching messages 👀
+    * "disks are slow"
+      * general perception
+        * Reason: 🧠 hard drives -- has been diverging from the -- latency of a disk seek 🧠
+          * _Example:_ <a href="https://en.wikipedia.org/wiki/Non-RAID_drive_architectures">JBOD</a> configuration / 6 x 7200rpm SATA RAID-5 array 's performance of 
+            * linear writes = 600MB/sec
+              * 6000X next one
+            * random writes = 100k/sec&mdash;
+          * solution
+            * 👀modern OS have increasingly aggressive used main memory -- for -- disk caching👀
+              * how does it work?
+                * if the memory is reclaimed -> modern OS -- will free memory to -- disk caching / little performance penalty
+              * ALL disk reads & writes -- will go through this -- unified cache 
+                * this feature NOT easily be turned off
+                * if a process maintains an in-process cache of the data -> this data -- will likely be -- duplicated | OS pagecache
+      * -> persistent structure can NOT offer competitive performance
+      * if disk structure is properly designed -> fast == network speed
+    * linear reads and writes
+      * predictable of all usage patterns
+      * heavily optimized -- by the -- OS
+        * modern OS provides techniques
+          * read-ahead
+            * == prefetch data | large block multiples
+          * write-behind
+            * == group smaller logical writes | large physical writes
+    * <a href="https://deliveryimages.acm.org/10.1145/1570000/1563874/jacobs3.jpg">sequential disk access' speed | some cases > random memory access' speed</a>
+      * see <a href="https://queue.acm.org/detail.cfm?id=1563874">ACM Queue article</a> 
+    * 👀built | JVM 👀
+      * -> 
+        * memory overhead of objects VERY high
+          * 's size = 2 * data stored's size
+        * if in-heap data increases -> Java garbage collection becomes increasingly
+          * fiddly
+          * slow 
+      * TODO:As a result of these factors using the filesystem and relying on pagecache is superior to maintaining an in-memory cache or other structure&mdash;we at least double the available cache by having automatic access
+              to all free memory, and likely double again by storing a compact byte structure rather than individual objects. Doing so will result in a cache of up to 28-30GB on a 32GB machine without GC penalties.
+              Furthermore, this cache will stay warm even if the service is restarted, whereas the in-process cache will need to be rebuilt in memory (which for a 10GB cache may take 10 minutes) or else it will need to start
+              with a completely cold cache (which likely means terrible initial performance). This also greatly simplifies the code as all logic for maintaining coherency between the cache and filesystem is now in the OS,
+              which tends to do so more efficiently and more correctly than one-off in-process attempts. If your disk usage favors linear reads then read-ahead is effectively pre-populating this cache with useful data on each
+              disk read.
+              <p>
+              This suggests a design which is very simple: rather than maintain as much as possible in-memory and flush it all out to the filesystem in a panic when we run out of space, we invert that. All data is immediately
+              written to a persistent log on the filesystem without necessarily flushing to disk. In effect this just means that it is transferred into the kernel's pagecache.
+              <p>
+              This style of pagecache-centric design is described in an <a href="https://varnish-cache.org/wiki/ArchitectNotes">article</a> on the design of Varnish here (along with a healthy dose of arrogance).
 
  <h4 class="anchor-heading"><a id="design_constanttime" class="anchor-link"></a><a href="#design_constanttime">Constant Time Suffices</a></h4>
     <p>
