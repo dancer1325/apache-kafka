@@ -1,26 +1,35 @@
 Apache Kafka
 =================
-See our [web site](https://kafka.apache.org) for details on the project.
+* see our [web site](https://kafka.apache.org)
 
-You need to have [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) installed.
+* requirements
+  * install [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
-We build and test Apache Kafka with 11, 17 and 21. We set the `release` parameter in javac and scalac
-to `11` to ensure the generated binaries are compatible with Java 11 or higher (independently of the Java version
-used for compilation). Java 11 support for the broker and tools has been deprecated since Apache Kafka 3.7 and removal 
-of both is planned for Apache Kafka 4.0.([KIP-1013](https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=284789510) for more details).
+* kafka
+  * build & test -- with --
+    * Java v11,
+    * Java v17
+    * Java v21
+  * Scala 2.13
+    * ONLY supported 
 
-Scala 2.13 is the only supported version in Apache Kafka.
+* | javac & scalac,
+  * `release=11`
+    * Reason: 🧠ensure the generated binaries -- are compatible with -- Java v11+ 🧠
+      * != Java version / used for compilation
+    * | Apache Kafka v3.7, 
+      * EXCEPT to, broker & tools
+        * Reason: 🧠 BOTH are planned for removal | Apache Kafka 4.0.([KIP-1013](https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=284789510) 🧠
 
 ### Build a jar and run it ###
-    ./gradlew jar
-
-Follow instructions in https://kafka.apache.org/quickstart
+* `./gradlew jar`
+  * see https://kafka.apache.org/quickstart
 
 ### Build source jar ###
-    ./gradlew srcJar
+* `./gradlew srcJar`
 
 ### Build aggregated javadoc ###
-    ./gradlew aggregatedJavadoc
+* `./gradlew aggregatedJavadoc`
 
 ### Build javadoc and scaladoc ###
     ./gradlew javadoc
@@ -34,7 +43,7 @@ Follow instructions in https://kafka.apache.org/quickstart
     ./gradlew unitTest
     ./gradlew integrationTest
     ./gradlew quarantinedTest  # runs the quarantined tests
-
+ 
     
 ### Force re-running tests without code change ###
     ./gradlew test --rerun-tasks
@@ -62,17 +71,20 @@ to `log4j.logger.org.apache.kafka=INFO` and then run:
 And you should see `INFO` level logs in the file under the `clients/build/test-results/test` directory.
 
 ### Specifying test retries ###
-Retries are disabled by default, but you can set maxTestRetryFailures and maxTestRetries to enable retries.
-
-The following example declares -PmaxTestRetries=1 and -PmaxTestRetryFailures=3 to enable a failed test to be retried once, with a total retry limit of 3.
-
-    ./gradlew test -PmaxTestRetries=1 -PmaxTestRetryFailures=3
-
-The quarantinedTest task also has no retries by default, but you can set maxQuarantineTestRetries and maxQuarantineTestRetryFailures to enable retries, similar to the test task.
-
-    ./gradlew quarantinedTest -PmaxQuarantineTestRetries=3 -PmaxQuarantineTestRetryFailures=20
-
-See [Test Retry Gradle Plugin](https://github.com/gradle/test-retry-gradle-plugin) for and [build.yml](.github/workflows/build.yml) more details.
+* Retries
+  * 👀by default, they are disabled 👀
+  * if you want to enable 
+    * test retries -> set `maxTestRetryFailures` & `maxTestRetries`
+      * _Example:_ declares `-PmaxTestRetries=1` (failedTestRetries) & `-PmaxTestRetryFailures=3` (== totalRetryLimit)
+        ```
+        ./gradlew test -PmaxTestRetries=1 -PmaxTestRetryFailures=3
+        ```
+    * quarantinedTest retries -> set `maxQuarantineTestRetries` & `maxQuarantineTestRetryFailures`
+      * _Example:_ 
+        ```
+        ./gradlew quarantinedTest -PmaxQuarantineTestRetries=3 -PmaxQuarantineTestRetryFailures=20
+        ```
+* see [Test Retry Gradle Plugin](https://github.com/gradle/test-retry-gradle-plugin) & [build.yml](.github/workflows/build.yml)
 
 ### Generating test coverage reports ###
 Generate coverage reports for the whole project:
@@ -195,9 +207,9 @@ The spotbugs warnings will be found in `reports/spotbugs/main.html` and `reports
 directories.  Use -PxmlSpotBugsReport=true to generate an XML report instead of an HTML one.
 
 ### JMH microbenchmarks ###
-We use [JMH](https://openjdk.java.net/projects/code-tools/jmh/) to write microbenchmarks that produce reliable results in the JVM.
-    
-See [jmh-benchmarks/README.md](https://github.com/apache/kafka/blob/trunk/jmh-benchmarks/README.md) for details on how to run the microbenchmarks.
+* we use [JMH](https://openjdk.java.net/projects/code-tools/jmh/)
+  * Reason: 🧠produce reliable results | JVM 🧠
+  * see [jmh-benchmarks/README.md](https://github.com/apache/kafka/blob/trunk/jmh-benchmarks/README.md)
 
 ### Dependency Analysis ###
 
@@ -255,7 +267,4 @@ See [vagrant/README.md](vagrant/README.md).
 
 ### Contribution ###
 
-Apache Kafka is interested in building the community; we would welcome any thoughts or [patches](https://issues.apache.org/jira/browse/KAFKA). You can reach us [on the Apache mailing lists](http://kafka.apache.org/contact.html).
-
-To contribute follow the instructions here:
- * https://kafka.apache.org/contributing.html 
+* [Apache mailing lists](http://kafka.apache.org/contact.html)
