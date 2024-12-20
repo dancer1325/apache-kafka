@@ -1,21 +1,3 @@
-<!--
- Licensed to the Apache Software Foundation (ASF) under one or more
- contributor license agreements.  See the NOTICE file distributed with
- this work for additional information regarding copyright ownership.
- The ASF licenses this file to You under the Apache License, Version 2.0
- (the "License"); you may not use this file except in compliance with
- the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--->
-
-
 <h4 class="anchor-heading">
     <a class="anchor-link" id="intro_streaming" href="#intro_streaming"></a>
     <a href="#intro_streaming">What is event streaming?</a>
@@ -24,7 +6,7 @@
 * Event streaming
   * == digital human body's central nervous system
   * uses
-    * 'always-on' world
+    * | 'always-active' world
       * businesses are
         * software-defined
         * automated,
@@ -45,17 +27,21 @@
           <a href="#intro_usage">What can I use event streaming for?</a>
 </h4>
 
-* <a href="/powered-by">WIDE use cases</a> | DIFFERENT industries & organizations
+* [WIDE use cases](https://kafka.apache.org/powered-by) | DIFFERENT industries & organizations
   * process payments & financial transactions | real-time
     * _Example:_ stock exchanges, banks, and insurances 
-  * track and monitor cars, trucks, fleets, and shipments in real-time
+  * track and monitor cars, trucks, fleets, and shipments | real-time
     * _Example:_ logistics & automotive industry 
   * continuously capture & analyze sensor data from IoT devices or other equipment
     * _Example:_ factories and wind parks
-  * collect and immediately react to customer interactions and orders, such as in retail, the hotel and travel industry, and mobile applications.
-  * To monitor patients in hospital care and predict changes in condition to ensure timely treatment in emergencies.
-  * To connect, store, and make available data produced by different divisions of a company.
-  * To serve as the foundation for data platforms, event-driven architectures, and microservices.
+  * collect and immediately react to customer interactions and orders
+    * _Example:_ retail, hotel and travel industry and mobile applications
+  * monitor patients | hospital care and predict changes in condition
+  * connect, store, and make available data / produced by different divisions of a company
+  * foundation for 
+    * data platforms,
+    * event-driven architectures,
+    * microservices
 
 <h4 class="anchor-heading">
                             <a class="anchor-link" id="intro_platform" href="#intro_platform"></a>
@@ -63,7 +49,7 @@
 </h4>
 
 * Kafka
-  * == 3 key capabilities
+  * 👀== 3 key capabilities, about event streaming, 👀
     * <strong>publish</strong> (to write) & <strong>subscribe</strong> (to read) -- streams of events /
       * include continuous import/export of your data -- from -- OTHER systems
     * <strong>store</strong> streams of events
@@ -72,44 +58,56 @@
     * <strong>process</strong> streams of events |
       * as they occur or
       * retrospectively
-  * -> you can implement <a href="/powered-by">your use cases</a> -- for -- event streaming E2E / 1! battle-tested solution
-  * TODO:
-
-
-                                          And all this functionality is provided in a distributed, highly scalable, elastic, fault-tolerant, and
-                                          secure manner. Kafka can be deployed on bare-metal hardware, virtual machines, and containers, and on-premises
-                                          as well as in the cloud. You can choose between self-managing your Kafka environments and using fully managed
-                                          services offered by a variety of vendors.
-
+  * allows
+    * implementing your use cases -- for -- event streaming E2E / 👀1! battle-tested solution 👀
+  * can be deployed | 
+    * bare-metal hardware,
+    * virtual machines,
+    * containers,
+    * on-premises
+    * cloud
+  * about managing
+    * self-managing
+    * fully managed services / -- offered by a -- variety of vendors
+  * provides it's functionality in a manner 
+    * distributed,
+    * highly scalable,
+    * elastic,
+    * fault-tolerant,
+    * secure
 
 <h4 class="anchor-heading">
                             <a class="anchor-link" id="intro_nutshell" href="#intro_nutshell"></a>
-                            <a href="#intro_nutshell">How does Kafka work in a nutshell?</a>
+                            <a href="#intro_nutshell">How does Kafka work | nutshell?</a>
 </h4>
-                          <p>
-                            Kafka is a distributed system consisting of <strong>servers</strong> and <strong>clients</strong> that
-                            communicate via a high-performance <a href="/protocol.html">TCP network protocol</a>.
-                            It can be deployed on bare-metal hardware, virtual machines, and containers in on-premise as well as cloud
-                            environments.
-                          </p>
-                          <p>
-                            <strong>Servers</strong>: Kafka is run as a cluster of one or more servers that can span multiple datacenters
-                            or cloud regions. Some of these servers form the storage layer, called the brokers. Other servers run
-                            <a href="/documentation/#connect">Kafka Connect</a> to continuously import and export
-                            data as event streams to integrate Kafka with your existing systems such as relational databases as well as
-                            other Kafka clusters. To let you implement mission-critical use cases, a Kafka cluster is highly scalable
-                            and fault-tolerant: if any of its servers fails, the other servers will take over their work to ensure
-                            continuous operations without any data loss.
-                          </p>
-                          <p>
-                            <strong>Clients</strong>: They allow you to write distributed applications and microservices that read, write,
-                            and process streams of events in parallel, at scale, and in a fault-tolerant manner even in the case of network
-                            problems or machine failures. Kafka ships with some such clients included, which are augmented by
-                            <a href="https://cwiki.apache.org/confluence/display/KAFKA/Clients">dozens of clients</a> provided by the Kafka
-                            community: clients are available for Java and Scala including the higher-level
-                            <a href="/documentation/streams/">Kafka Streams</a> library, for Go, Python, C/C++, and
-                            many other programming languages as well as REST APIs.
-                          </p>
+
+* Kafka
+  * 👀 servers + clients 👀
+    * == distributed system
+    * / communicate -- via a -- high-performance [TCP network protocol](protocol.md)
+    * Servers
+      * 👀== cluster of >=1 servers 👀/ 
+        * can span multiple datacenters OR cloud regions
+        * uses of these servers
+          * 👀brokers == storage layer / made up of SOME of these previous servers 👀
+          * run [Kafka Connect](connect.md) 
+      * highly scalable & fault-tolerant
+        * == if ANY of its servers fails -> other servers -- will take over -- their work
+          * Reason: 🧠ensure continuous operations / NO data loss 🧠
+    * Clients
+      * allow you
+        * write distributed applications & microservices / about streams of events
+          * actions
+            * read,
+            * write,
+            * process
+          * via
+            * in parallel,
+            * at scale,
+            * fault-tolerant
+      * types
+        * built-in
+        * [community](https://cwiki.apache.org/confluence/display/KAFKA/Clients)
 
 <h4 class="anchor-heading">
                             <a class="anchor-link" id="intro_concepts_and_terms" href="#intro_concepts_and_terms"></a>
