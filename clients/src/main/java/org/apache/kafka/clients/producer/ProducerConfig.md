@@ -26,3 +26,16 @@
     * if you enable idempotence -> requires `acks=all`
     * if idempotence is NOT explicitly enabled & `acks!=all` -> idempotence is disabled
 * TODO:
+* `retries`
+  * see [CommonClientConfigs](../CommonClientConfigs.md)
+  * if >0 & SOME record / sent failed -- with a -- potentially transient error -> client will resend
+    * 's behavior == record resent by the client | receiving the error 's behavior
+  * 👀if timeout exceeded `DELIVERY_TIMEOUT_MS_CONFIG` ALTHOUGH # of retries NOT exhausted -> NO more attempts to retry == produce requests will be failed 👀
+    * common use cases
+      * unset `retries` & configure `DELIVERY_TIMEOUT_MS_CONFIG`
+  * idempotence
+    * if you enable idempotence -> requires `retries>0`
+    * if idempotence is NOT explicitly enabled & `retries<=0` -> idempotence is disabled
+  * if you enable it & `enable.idempotence=false` & `MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION>1` -> potentially change the ordering of records
+    * Reason: 🧠if 2 batches -- are sent to a -- 1! partition & first fails & retried / second succeeds -> second batch's records MAY appear first 🧠
+* TODO:
