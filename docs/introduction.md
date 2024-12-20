@@ -105,99 +105,85 @@
             * in parallel,
             * at scale,
             * fault-tolerant
+      * available | MANY programming languages 
       * types
         * built-in
+          * java-based
         * [community](https://cwiki.apache.org/confluence/display/KAFKA/Clients)
 
 <h4 class="anchor-heading">
                             <a class="anchor-link" id="intro_concepts_and_terms" href="#intro_concepts_and_terms"></a>
                             <a href="#intro_concepts_and_terms">Main Concepts and Terminology</a>
 </h4>
-                          <p>
-                            An <strong>event</strong> records the fact that "something happened" in the world or in your business. It is also called record or message in the documentation. When you read or write data to Kafka, you do this in the form of events. Conceptually, an event has a key, value, timestamp, and optional metadata headers. Here's an example event:
-                          </p>
-                          <ul>
-                            <li>
-                              Event key: "Alice"
-                            </li>
-                            <li>
-                              Event value: "Made a payment of $200 to Bob"
-                            </li>
-                            <li>
-                              Event timestamp: "Jun. 25, 2020 at 2:06 p.m."
-                            </li>
-                          </ul>
-                          <p>
-                            <strong>Producers</strong> are those client applications that publish (write) events to Kafka, and <strong>consumers</strong> are those that subscribe to (read and process) these events. In Kafka, producers and consumers are fully decoupled and agnostic of each other, which is a key design element to achieve the high scalability that Kafka is known for. For example, producers never need to wait for consumers. Kafka provides various <a href="/documentation/#semantics">guarantees</a> such as the ability to process events exactly-once.
-                          </p>
-                          <p>
-                            Events are organized and durably stored in <strong>topics</strong>. Very simplified, a topic is similar to a folder in a filesystem, and the events are the files in that folder. An example topic name could be "payments". Topics in Kafka are always multi-producer and multi-subscriber: a topic can have zero, one, or many producers that write events to it, as well as zero, one, or many consumers that subscribe to these events. Events in a topic can be read as often as needed—unlike traditional messaging systems, events are not deleted after consumption. Instead, you define for how long Kafka should retain your events through a per-topic configuration setting, after which old events will be discarded. Kafka's performance is effectively constant with respect to data size, so storing data for a long time is perfectly fine.
-                          </p>
-                          <p>
-                            Topics are <strong>partitioned</strong>, meaning a topic is spread over a number of "buckets" located on different Kafka brokers. This distributed placement of your data is very important for scalability because it allows client applications to both read and write the data from/to many brokers at the same time. When a new event is published to a topic, it is actually appended to one of the topic's partitions. Events with the same event key (e.g., a customer or vehicle ID) are written to the same partition, and Kafka <a href="/documentation/#semantics">guarantees</a> that any consumer of a given topic-partition will always read that partition's events in exactly the same order as they were written.
-                          </p>
-                          <figure class="figure">
-                            <img src="/images/streams-and-tables-p1_p4.png" class="figure-image" />
-                            <figcaption class="figure-caption">
-                              Figure: This example topic has four partitions P1–P4. Two different producer clients are publishing,
-                              independently from each other, new events to the topic by writing events over the network to the topic's
-                              partitions. Events with the same key (denoted by their color in the figure) are written to the same
-                              partition. Note that both producers can write to the same partition if appropriate.
-                            </figcaption>
-                          </figure>
-                          <p>
-                            To make your data fault-tolerant and highly-available, every topic can be <strong>replicated</strong>, even across geo-regions or datacenters, so that there are always multiple brokers that have a copy of the data just in case things go wrong, you want to do maintenance on the brokers, and so on. A common production setting is a replication factor of 3, i.e., there will always be three copies of your data. This replication is performed at the level of topic-partitions.
-                          </p>
-                          <p>
-                            This primer should be sufficient for an introduction. The <a href="/documentation/#design">Design</a> section of the documentation explains Kafka's various concepts in full detail, if you are interested.
-                          </p>
+
+* event or record or message
+  * goal
+    * 👀records the fact that "something happened"👀
+  * uses
+    * ANY read or write data to Kafka -- is done via -- events
+  * == key + value + timestamp + optional metadata headers
+    * _Example:_
+        ```
+        Event key: "Alice"
+        Event value: "Made a payment of $200 to Bob"
+        Event timestamp: "Jun. 25, 2020 at 2:06 p.m."
+        ```
+  * 💡organized and durably stored | topics💡
+    * store data | long time is PERFECTLY fine
+      * Reason: 🧠Kafka's performance is effectively constant -- respect to -- data size 🧠 
+  * 💡can be read as often as needed💡
+    * != traditional messaging systems
+      * Reason: 🧠 ONCE events are consumed -> NOT deleted 🧠
+    * 👀UNTIL event's time life👀
+      * ⚠️configuration setting / topic ⚠️ 
+
+* topics
+  * 💡== filesystem's folder 💡 
+    * -> events == files | that folder
+  * are ALWAYS multi-producer & multi-subscriber
+    * == topic can have
+      * \>=0 producers / write events | it
+      * \>=0 consumers / subscribe | these events 
+  * 👀are partitioned 👀
+    * == topic -- is spread over a -- # of "buckets" / located | DIFFERENT Kafka brokers 
+    * -> scalability
+      * Reason: 🧠client applications can read and write data -- from/to -- MANY brokers | SAME time 🧠
+    * 👀if a NEW event is published | a topic -> appended | one of the topic's partitions 👀
+    * events / SAME event's key -> written | SAME partition
+    * _Example:_
+      * 2 DIFFERENT producer clients are publishing independently
+      * BOTH producers can write | SAME partition
+      
+        ![](images/introduction-1.png)
+  * 👀can be replicated 👀
+    * -> your data fault-tolerant and highly-available
+    * EVEN ACROSS geo-regions or datacenters
+      * that's why there are ALWAYS MULTIPLE brokers
+    * _Example:_ (MOST common production setting) replication factor of 3
+      * == ALWAYS be 3 copies of your data
+
+* Producers
+  * client applications / publish (write) events to Kafka
+* Consumers
+  * client applications / subscribe to (read and process) these events
+
+* In Kafka,
+  * 👀producers <- fully decoupled & agnostic of -> consumers 👀
+    * Reason: 🧠enable high scalability of Kafka 🧠
+    * _Example:_ producers NEVER need to wait for consumers
+  * 👀consumers 
+    * process events [exactly-1!](design.md#46-message-delivery-semantics) 👀
+    * of a GIVEN topic-partition -- will always read -- that partition's events | SAME order / they were written 👀
 
 <h4 class="anchor-heading">
                             <a class="anchor-link" id="intro_apis" href="#intro_apis"></a>
                             <a href="#intro_apis">Kafka APIs</a>
 </h4>
-                          <p>
-                            In addition to command line tooling for management and administration tasks, Kafka has five core APIs for Java and Scala:
-                          </p>
-                          <ul>
-                            <li>
-                              The <a href="/documentation.html#adminapi">Admin API</a> to manage and inspect topics, brokers, and other Kafka objects.
-                            </li>
-                            <li>
-                              The <a href="/documentation.html#producerapi">Producer API</a> to publish (write) a stream of events to one or more Kafka topics.
-                            </li>
-                            <li>
-                              The <a href="/documentation.html#consumerapi">Consumer API</a> to subscribe to (read) one or more topics and to process the stream of events produced to them.
-                            </li>
-                            <li>
-                              The <a href="/documentation/streams">Kafka Streams API</a> to implement stream processing applications and microservices. It provides higher-level functions to process event streams, including transformations, stateful operations like aggregations and joins, windowing, processing based on event-time, and more. Input is read from one or more topics in order to generate output to one or more topics, effectively transforming the input streams to output streams.
-                            </li>
-                            <li>
-                              The <a href="/documentation.html#connect">Kafka Connect API</a> to build and run reusable data import/export connectors that consume (read) or produce (write) streams of events from and to external systems and applications so they can integrate with Kafka. For example, a connector to a relational database like PostgreSQL might capture every change to a set of tables. However, in practice, you typically don't need to implement your own connectors because the Kafka community already provides hundreds of ready-to-use connectors.
-                            </li>
-                          </ul>
 
-                          <!-- TODO: add new section once supporting page is written -->
+* Kafka CLI
+  * uses
+    * tasks of
+      * management
+      * administration
 
-<h4 class="anchor-heading">
-                            <a class="anchor-link" id="intro_more" href="#intro_more"></a>
-                            <a href="#intro_more">Where to go from here</a>
-</h4>
-                          <ul>
-                            <li>
-                              To get hands-on experience with Kafka, follow the <a href="/quickstart">Quickstart</a>.
-                            </li>
-                            <li>
-                              To understand Kafka in more detail, read the <a href="/documentation/">Documentation</a>.
-                              You also have your choice of <a href="/books-and-papers">Kafka books and academic papers</a>.
-                            </li>
-                            <li>
-                              Browse through the <a href="/powered-by">Use Cases</a> to learn how other users in our world-wide community are getting value out of Kafka.
-                            </li>
-                            <li>
-                              Join a <a href="/events">local Kafka meetup group</a> and
-                              <a href="https://kafka-summit.org/past-events/">watch talks from Kafka Summit</a>, the main conference of the Kafka community.
-                            </li>
-                          </ul>
-
-<div class="p-introduction"></div>
+* [Kafka core APIs](api.md)
