@@ -1,20 +1,3 @@
-<!--
- Licensed to the Apache Software Foundation (ASF) under one or more
- contributor license agreements.  See the NOTICE file distributed with
- this work for additional information regarding copyright ownership.
- The ASF licenses this file to You under the Apache License, Version 2.0
- (the "License"); you may not use this file except in compliance with
- the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--->
-
  <h3 class="anchor-heading"><a id="majordesignelements" class="anchor-link"></a><a href="#majordesignelements">4.1 Motivation</a></h3>
  * original design of Kafka
    * 👀unified platform -- for -- handling ALL the real-time data feeds / <a href="#introduction">normally a large company needs</a> 👀
@@ -156,7 +139,7 @@
 
 <h3 class="anchor-heading"><a id="theproducer" class="anchor-link"></a><a href="#theproducer">4.4 The Producer</a></h3>
 
-    <h4 class="anchor-heading"><a id="design_loadbalancing" class="anchor-link"></a><a href="#design_loadbalancing">Load balancing</a></h4>
+<h4 class="anchor-heading"><a id="design_loadbalancing" class="anchor-link"></a><a href="#design_loadbalancing">Load balancing</a></h4>
     <p>
     The producer sends data directly to the broker that is the leader for the partition without any intervening routing tier. To help the producer do this all Kafka nodes can answer a request for metadata about which
     servers are alive and where the leaders for the partitions of a topic are at any given time to allow the producer to appropriately direct its requests.
@@ -166,7 +149,7 @@
     chosen was a user id then all data for a given user would be sent to the same partition. This in turn will allow consumers to make locality assumptions about their consumption. This style of partitioning is explicitly
     designed to allow locality-sensitive processing in consumers.
 
-    <h4 class="anchor-heading"><a id="design_asyncsend" class="anchor-link"></a><a href="#design_asyncsend">Asynchronous send</a></h4>
+<h4 class="anchor-heading"><a id="design_asyncsend" class="anchor-link"></a><a href="#design_asyncsend">Asynchronous send</a></h4>
     <p>
     Batching is one of the big drivers of efficiency, and to enable batching the Kafka producer will attempt to accumulate data in memory and to send out larger batches in a single request. The batching can be configured
     to accumulate no more than a fixed number of messages and to wait no longer than some fixed latency bound (say 64k or 10 ms). This allows the accumulation of more bytes to send, and few larger I/O operations on the
@@ -175,12 +158,12 @@
     Details on <a href="#producerconfigs">configuration</a> and the <a href="#producerapi">api</a> for the producer can be found
     elsewhere in the documentation.
 
-    <h3 class="anchor-heading"><a id="theconsumer" class="anchor-link"></a><a href="#theconsumer">4.5 The Consumer</a></h3>
+<h3 class="anchor-heading"><a id="theconsumer" class="anchor-link"></a><a href="#theconsumer">4.5 The Consumer</a></h3>
 
     The Kafka consumer works by issuing "fetch" requests to the brokers leading the partitions it wants to consume. The consumer specifies its offset in the log with each request and receives back a chunk of log
     beginning from that position. The consumer thus has significant control over this position and can rewind it to re-consume data if need be.
 
-    <h4 class="anchor-heading"><a id="design_pull" class="anchor-link"></a><a href="#design_pull">Push vs. pull</a></h4>
+<h4 class="anchor-heading"><a id="design_pull" class="anchor-link"></a><a href="#design_pull">Push vs. pull</a></h4>
     <p>
     An initial question we considered is whether consumers should pull data from brokers or brokers should push data to the consumer. In this respect Kafka follows a more traditional design, shared by most messaging
     systems, where data is pushed to the broker from the producer and pulled from the broker by the consumer. Some logging-centric systems, such as <a href="https://github.com/facebook/scribe">Scribe</a> and
@@ -203,7 +186,7 @@
     scale led us to feel that involving thousands of disks in the system across many applications would not actually make things more reliable and would be a nightmare to operate. And in practice we have found that we
     can run a pipeline with strong SLAs at large scale without a need for producer persistence.
 
-    <h4 class="anchor-heading"><a id="design_consumerposition" class="anchor-link"></a><a href="#design_consumerposition">Consumer Position</a></h4>
+<h4 class="anchor-heading"><a id="design_consumerposition" class="anchor-link"></a><a href="#design_consumerposition">Consumer Position</a></h4>
     Keeping track of <i>what</i> has been consumed is, surprisingly, one of the key performance points of a messaging system.
     <p>
     Most messaging systems keep metadata about what messages have been consumed on the broker. That is, as a message is handed out to a consumer, the broker either records that fact locally immediately or it may wait
@@ -224,7 +207,7 @@
     There is a side benefit of this decision. A consumer can deliberately <i>rewind</i> back to an old offset and re-consume data. This violates the common contract of a queue, but turns out to be an essential feature
     for many consumers. For example, if the consumer code has a bug and is discovered after some messages are consumed, the consumer can re-consume those messages once the bug is fixed.
 
-    <h4 class="anchor-heading"><a id="design_offlineload" class="anchor-link"></a><a href="#design_offlineload">Offline Data Load</a></h4>
+<h4 class="anchor-heading"><a id="design_offlineload" class="anchor-link"></a><a href="#design_offlineload">Offline Data Load</a></h4>
 
     Scalable persistence allows for the possibility of consumers that only periodically consume such as batch data loads that periodically bulk-load data into an offline system such as Hadoop or a relational data
     warehouse.
@@ -232,7 +215,7 @@
     In the case of Hadoop we parallelize the data load by splitting the load over individual map tasks, one for each node/topic/partition combination, allowing full parallelism in the loading. Hadoop provides the task
     management, and tasks which fail can restart without danger of duplicate data&mdash;they simply restart from their original position.
 
-    <h4 class="anchor-heading"><a id="static_membership" class="anchor-link"></a><a href="#static_membership">Static Membership</a></h4>
+<h4 class="anchor-heading"><a id="static_membership" class="anchor-link"></a><a href="#static_membership">Static Membership</a></h4>
     Static membership aims to improve the availability of stream applications, consumer groups and other applications built on top of the group rebalance protocol.
     The rebalance protocol relies on the group coordinator to allocate entity ids to group members. These generated ids are ephemeral and will change when members restart and rejoin.
     For consumer based apps, this "dynamic membership" can cause a large percentage of tasks re-assigned to different instances during administrative operations
@@ -254,7 +237,7 @@
     For more details, see
     <a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-345%3A+Introduce+static+membership+protocol+to+reduce+consumer+rebalances">KIP-345</a>
 
-    <h3 class="anchor-heading"><a id="semantics" class="anchor-link"></a><a href="#semantics">4.6 Message Delivery Semantics</a></h3>
+<h3 class="anchor-heading"><a id="semantics" class="anchor-link"></a><a href="#semantics">4.6 Message Delivery Semantics</a></h3>
     <p>
     Now that we understand a little about how producers and consumers work, let's discuss the semantic guarantees Kafka provides between producer and consumer. Clearly there are multiple possible message delivery
     guarantees that could be provided:
@@ -319,132 +302,156 @@
     offset which makes implementing this feasible (see also <a href="https://kafka.apache.org/documentation/#connect">Kafka Connect</a>). Otherwise, Kafka guarantees at-least-once delivery by default, and allows
     the user to implement at-most-once delivery by disabling retries on the producer and committing offsets in the consumer prior to processing a batch of messages.
 
-    <h3 class="anchor-heading"><a id="replication" class="anchor-link"></a><a href="#replication">4.7 Replication</a></h3>
-    <p>
-    Kafka replicates the log for each topic's partitions across a configurable number of servers (you can set this replication factor on a topic-by-topic basis). This allows automatic failover to these replicas when a
-    server in the cluster fails so messages remain available in the presence of failures.
-    <p>
-    Other messaging systems provide some replication-related features, but, in our (totally biased) opinion, this appears to be a tacked-on thing, not heavily used, and with large downsides: replicas are inactive,
-    throughput is heavily impacted, it requires fiddly manual configuration, etc. Kafka is meant to be used with replication by default&mdash;in fact we implement un-replicated topics as replicated topics where the
-    replication factor is one.
-    <p>
-    The unit of replication is the topic partition. Under non-failure conditions, each partition in Kafka has a single leader and zero or more followers. The total number of replicas including the leader constitute the
-    replication factor. All writes go to the leader of the partition, and reads can go to the leader or the followers of the partition. Typically, there are many more partitions than brokers and the leaders are evenly distributed among brokers. The logs on the followers are
-    identical to the leader's log&mdash;all have the same offsets and messages in the same order (though, of course, at any given time the leader may have a few as-yet unreplicated messages at the end of its log).
-    <p>
-    Followers consume messages from the leader just as a normal Kafka consumer would and apply them to their own log. Having the followers pull from the leader has the nice property of allowing the follower to naturally
-    batch together log entries they are applying to their log.
-    <p>
-    As with most distributed systems, automatically handling failures requires a precise definition of what it means for a node to be "alive." In Kafka, a special node
-    known as the "controller" is responsible for managing the registration of brokers in the cluster. Broker liveness has two conditions:
-    <ol>
-      <li>Brokers must maintain an active session with the controller in order to receive regular metadata updates.</li>
-      <li>Brokers acting as followers must replicate the writes from the leader and not fall "too far" behind.</li>
-    </ol>
-    <p>
-    What is meant by an "active session" depends on the cluster configuration. For KRaft clusters, an active session is maintained by 
-    sending periodic heartbeats to the controller. If the controller fails to receive a heartbeat before the timeout configured by 
-    <code>broker.session.timeout.ms</code> expires, then the node is considered offline.
-    <p>
-    For clusters using Zookeeper, liveness is determined indirectly through the existence of an ephemeral node which is created by the broker on
-    initialization of its Zookeeper session. If the broker loses its session after failing to send heartbeats to Zookeeper before expiration of
-    <code>zookeeper.session.timeout.ms</code>, then the node gets deleted. The controller would then notice the node deletion through a Zookeeper watch
-    and mark the broker offline.
-    <p>
-    We refer to nodes satisfying these two conditions as being "in sync" to avoid the vagueness of "alive" or "failed". The leader keeps track of the set of "in sync" replicas,
-    which is known as the ISR. If either of these conditions fail to be satisfied, then the broker will be removed from the ISR. For example,
-    if a follower dies, then the controller will notice the failure through the loss of its session, and will remove the broker from the ISR.
-    On the other hand, if the follower lags too far behind the leader but still has an active session, then the leader can also remove it from the ISR.
-    The determination of lagging replicas is controlled through the <code>replica.lag.time.max.ms</code> configuration. 
-    Replicas that cannot catch up to the end of the log on the leader within the max time set by this configuration are removed from the ISR.
-    <p>
-    In distributed systems terminology we only attempt to handle a "fail/recover" model of failures where nodes suddenly cease working and then later recover (perhaps without knowing that they have died). Kafka does not
-    handle so-called "Byzantine" failures in which nodes produce arbitrary or malicious responses (perhaps due to bugs or foul play).
-    <p>
-    We can now more precisely define that a message is considered committed when all replicas in the ISR for that partition have applied it to their log.
-    Only committed messages are ever given out to the consumer. This means that the consumer need not worry about potentially seeing a message that could be lost if the leader fails. Producers, on the other hand,
-    have the option of either waiting for the message to be committed or not, depending on their preference for tradeoff between latency and durability. This preference is controlled by the acks setting that the
-    producer uses.
-    Note that topics have a setting for the "minimum number" of in-sync replicas that is checked when the producer requests acknowledgment that a message
-    has been written to the full set of in-sync replicas. If a less stringent acknowledgement is requested by the producer, then the message can be committed, and consumed,
-    even if the number of in-sync replicas is lower than the minimum (e.g. it can be as low as just the leader).
-    <p>
-    The guarantee that Kafka offers is that a committed message will not be lost, as long as there is at least one in sync replica alive, at all times.
-    <p>
-    Kafka will remain available in the presence of node failures after a short fail-over period, but may not remain available in the presence of network partitions.
+<h3 class="anchor-heading"><a id="replication" class="anchor-link"></a><a href="#replication">4.7 Replication</a></h3>
+* 💡log / EACH topic's partitions -- is replicated by Kafka -- ACROSS configurable # of servers 💡
+  * if you want -> you can set this replication factor | topic-by-topic basis
+  * -> 👀if server | cluster fails -> messages remain AVAILABLE | presence of failures 👀
 
-    <h4><a id="design_replicatedlog" href="#design_replicatedlog">Replicated Logs: Quorums, ISRs, and State Machines (Oh my!)</a></h4>
+* replication-related features
+  * | OTHER messaging systems, 
+    * tacked-on thing
+    * NOT heavily used
+    * downsides:
+      * replicas are inactive,
+      * throughput is heavily impacted,
+      * requires fiddly manual configuration, 
+  * | Kafka,
+    * by default, 👀 used ALWAYS 👀
+      * 💡if you create un-replicated (== WITHOUT specifying replication) topics -> Kafka treats the topic -- as -- replication factor 1 💡
 
-    At its heart a Kafka partition is a replicated log. The replicated log is one of the most basic primitives in distributed data systems, and there are many approaches for implementing one. A replicated log can be
-    used by other systems as a primitive for implementing other distributed systems in the <a href="https://en.wikipedia.org/wiki/State_machine_replication">state-machine style</a>.
-    <p>
-    A replicated log models the process of coming into consensus on the order of a series of values (generally numbering the log entries 0, 1, 2, ...). There are many ways to implement this, but the simplest and fastest
-    is with a leader who chooses the ordering of values provided to it. As long as the leader remains alive, all followers need to only copy the values and ordering the leader chooses.
-    <p>
-    Of course if leaders didn't fail we wouldn't need followers! When the leader does die we need to choose a new leader from among the followers. But followers themselves may fall behind or crash so we must ensure we
-    choose an up-to-date follower. The fundamental guarantee a log replication algorithm must provide is that if we tell the client a message is committed, and the leader fails, the new leader we elect must also have
-    that message. This yields a tradeoff: if the leader waits for more followers to acknowledge a message before declaring it committed then there will be more potentially electable leaders.
-    <p>
-    If you choose the number of acknowledgements required and the number of logs that must be compared to elect a leader such that there is guaranteed to be an overlap, then this is called a Quorum.
-    <p>
-    A common approach to this tradeoff is to use a majority vote for both the commit decision and the leader election. This is not what Kafka does, but let's explore it anyway to understand the tradeoffs. Let's say we
-    have 2<i>f</i>+1 replicas. If <i>f</i>+1 replicas must receive a message prior to a commit being declared by the leader, and if we elect a new leader by electing the follower with the most complete log from at least
-    <i>f</i>+1 replicas, then, with no more than <i>f</i> failures, the leader is guaranteed to have all committed messages. This is because among any <i>f</i>+1 replicas, there must be at least one replica that contains
-    all committed messages. That replica's log will be the most complete and therefore will be selected as the new leader. There are many remaining details that each algorithm must handle (such as precisely defined what
-    makes a log more complete, ensuring log consistency during leader failure or changing the set of servers in the replica set) but we will ignore these for now.
-    <p>
-    This majority vote approach has a very nice property: the latency is dependent on only the fastest servers. That is, if the replication factor is three, the latency is determined by the faster follower not the slower one.
-    <p>
-    There are a rich variety of algorithms in this family including ZooKeeper's
-    <a href="https://web.archive.org/web/20140602093727/https://www.stanford.edu/class/cs347/reading/zab.pdf">Zab</a>,
-    <a href="https://www.usenix.org/system/files/conference/atc14/atc14-paper-ongaro.pdf">Raft</a>,
-    and <a href="https://pmg.csail.mit.edu/papers/vr-revisited.pdf">Viewstamped Replication</a>.
-    The most similar academic publication we are aware of to Kafka's actual implementation is
-    <a href="https://research.microsoft.com/apps/pubs/default.aspx?id=66814">PacificA</a> from Microsoft.
-    <p>
-    The downside of majority vote is that it doesn't take many failures to leave you with no electable leaders. To tolerate one failure requires three copies of the data, and to tolerate two failures requires five copies
-    of the data. In our experience having only enough redundancy to tolerate a single failure is not enough for a practical system, but doing every write five times, with 5x the disk space requirements and 1/5th the
-    throughput, is not very practical for large volume data problems. This is likely why quorum algorithms more commonly appear for shared cluster configuration such as ZooKeeper but are less common for primary data
-    storage. For example in HDFS the namenode's high-availability feature is built on a <a href="https://blog.cloudera.com/blog/2012/10/quorum-based-journaling-in-cdh4-1">majority-vote-based journal</a>, but this more
-    expensive approach is not used for the data itself.
-    <p>
-    Kafka takes a slightly different approach to choosing its quorum set. Instead of majority vote, Kafka dynamically maintains a set of in-sync replicas (ISR) that are caught-up to the leader. Only members of this set
-    are eligible for election as leader. A write to a Kafka partition is not considered committed until <i>all</i> in-sync replicas have received the write. This ISR set is persisted in the cluster metadata whenever it changes.
-    Because of this, any replica in the ISR is eligible to be elected leader. This is an important factor for Kafka's usage model where there are many partitions and ensuring leadership balance is important.
-    With this ISR model and <i>f+1</i> replicas, a Kafka topic can tolerate <i>f</i> failures without losing committed messages.
-    <p>
-    For most use cases we hope to handle, we think this tradeoff is a reasonable one. In practice, to tolerate <i>f</i> failures, both the majority vote and the ISR approach will wait for the same number of replicas to
-    acknowledge before committing a message (e.g. to survive one failure a majority quorum needs three replicas and one acknowledgement and the ISR approach requires two replicas and one acknowledgement).
-    The ability to commit without the slowest servers is an advantage of the majority vote approach. However, we think it is ameliorated by allowing the client to choose whether they block on the message commit or not,
-    and the additional throughput and disk space due to the lower required replication factor is worth it.
-    <p>
-    Another important design distinction is that Kafka does not require that crashed nodes recover with all their data intact. It is not uncommon for replication algorithms in this space to depend on the existence of
-    "stable storage" that cannot be lost in any failure-recovery scenario without potential consistency violations. There are two primary problems with this assumption. First, disk errors are the most common problem we
-    observe in real operation of persistent data systems and they often do not leave data intact. Secondly, even if this were not a problem, we do not want to require the use of fsync on every write for our consistency
-    guarantees as this can reduce performance by two to three orders of magnitude. Our protocol for allowing a replica to rejoin the ISR ensures that before rejoining, it must fully re-sync again even if it lost unflushed
-    data in its crash.
+* topic partition
+  * == unit of replication
+  * EACH partition -- has -- 1! leader + >=0 followers
+    * ALL writes -- go to the -- leader of the partition
+    * reads -- can go to the -- leader OR the followers of the partition
+  * TYPICALLY, 
+    * the # of partitions >> # of brokers 👀
+    * leaders are evenly distributed | brokers 
 
-    <h4><a id="design_uncleanleader" href="#design_uncleanleader">Unclean leader election: What if they all die?</a></h4>
+* replication factor
+  * == total # of replicas (including the leader)
 
-    Note that Kafka's guarantee with respect to data loss is predicated on at least one replica remaining in sync. If all the nodes replicating a partition die, this guarantee no longer holds.
-    <p>
-    However a practical system needs to do something reasonable when all the replicas die. If you are unlucky enough to have this occur, it is important to consider what will happen. There are two behaviors that could be
-    implemented:
-    <ol>
-        <li>Wait for a replica in the ISR to come back to life and choose this replica as the leader (hopefully it still has all its data).
-        <li>Choose the first replica (not necessarily in the ISR) that comes back to life as the leader.
-    </ol>
-    <p>
-    This is a simple tradeoff between availability and consistency. If we wait for replicas in the ISR, then we will remain unavailable as long as those replicas are down. If such replicas were destroyed or their data
-    was lost, then we are permanently down. If, on the other hand, a non-in-sync replica comes back to life and we allow it to become leader, then its log becomes the source of truth even though it is not guaranteed to
-    have every committed message. By default from version 0.11.0.0, Kafka chooses the first strategy and favor waiting for a consistent replica. This behavior can be changed using
-    configuration property <code>unclean.leader.election.enable</code>, to support use cases where uptime is preferable to consistency.
-    <p>
-    This dilemma is not specific to Kafka. It exists in any quorum-based scheme. For example in a majority voting scheme, if a majority of servers suffer a permanent failure, then you must either choose to lose 100% of
-    your data or violate consistency by taking what remains on an existing server as your new source of truth.
+* followers' logs == leader's log
+  * SAME offsets
+  * messages / SAME order
+    * ⚠️ALTHOUGH, | ANY given time, leader may have a few as-yet unreplicated messages | end of its log ⚠️
+      * Reason: 🧠needed time window BEFORE replicating the messages 🧠
+    * followers consume messages from the leader == normal Kafka consumer would
+
+* TODO:
+* Having the followers pull from the leader has the nice property of allowing the follower to naturally
+            batch together log entries they are applying to their log.
+            <p>
+            As with most distributed systems, automatically handling failures requires a precise definition of what it means for a node to be "alive." In Kafka, a special node
+            known as the "controller" is responsible for managing the registration of brokers in the cluster. Broker liveness has two conditions:
+            <ol>
+              <li>Brokers must maintain an active session with the controller in order to receive regular metadata updates.</li>
+              <li>Brokers acting as followers must replicate the writes from the leader and not fall "too far" behind.</li>
+            </ol>
+            <p>
+            What is meant by an "active session" depends on the cluster configuration. For KRaft clusters, an active session is maintained by 
+            sending periodic heartbeats to the controller. If the controller fails to receive a heartbeat before the timeout configured by 
+            <code>broker.session.timeout.ms</code> expires, then the node is considered offline.
+            <p>
+            For clusters using Zookeeper, liveness is determined indirectly through the existence of an ephemeral node which is created by the broker on
+            initialization of its Zookeeper session. If the broker loses its session after failing to send heartbeats to Zookeeper before expiration of
+            <code>zookeeper.session.timeout.ms</code>, then the node gets deleted. The controller would then notice the node deletion through a Zookeeper watch
+            and mark the broker offline.
+            <p>
+            We refer to nodes satisfying these two conditions as being "in sync" to avoid the vagueness of "alive" or "failed". The leader keeps track of the set of "in sync" replicas,
+            which is known as the ISR. If either of these conditions fail to be satisfied, then the broker will be removed from the ISR. For example,
+            if a follower dies, then the controller will notice the failure through the loss of its session, and will remove the broker from the ISR.
+            On the other hand, if the follower lags too far behind the leader but still has an active session, then the leader can also remove it from the ISR.
+            The determination of lagging replicas is controlled through the <code>replica.lag.time.max.ms</code> configuration. 
+            Replicas that cannot catch up to the end of the log on the leader within the max time set by this configuration are removed from the ISR.
+            <p>
+            In distributed systems terminology we only attempt to handle a "fail/recover" model of failures where nodes suddenly cease working and then later recover (perhaps without knowing that they have died). Kafka does not
+            handle so-called "Byzantine" failures in which nodes produce arbitrary or malicious responses (perhaps due to bugs or foul play).
+            <p>
+            We can now more precisely define that a message is considered committed when all replicas in the ISR for that partition have applied it to their log.
+            Only committed messages are ever given out to the consumer. This means that the consumer need not worry about potentially seeing a message that could be lost if the leader fails. Producers, on the other hand,
+            have the option of either waiting for the message to be committed or not, depending on their preference for tradeoff between latency and durability. This preference is controlled by the acks setting that the
+            producer uses.
+            Note that topics have a setting for the "minimum number" of in-sync replicas that is checked when the producer requests acknowledgment that a message
+            has been written to the full set of in-sync replicas. If a less stringent acknowledgement is requested by the producer, then the message can be committed, and consumed,
+            even if the number of in-sync replicas is lower than the minimum (e.g. it can be as low as just the leader).
+            <p>
+            The guarantee that Kafka offers is that a committed message will not be lost, as long as there is at least one in sync replica alive, at all times.
+            <p>
+            Kafka will remain available in the presence of node failures after a short fail-over period, but may not remain available in the presence of network partitions.
+
+<h4><a id="design_replicatedlog" href="#design_replicatedlog">Replicated Logs: Quorums, ISRs, and State Machines (Oh my!)</a></h4>
+
+            At its heart a Kafka partition is a replicated log. The replicated log is one of the most basic primitives in distributed data systems, and there are many approaches for implementing one. A replicated log can be
+            used by other systems as a primitive for implementing other distributed systems in the <a href="https://en.wikipedia.org/wiki/State_machine_replication">state-machine style</a>.
+            <p>
+            A replicated log models the process of coming into consensus on the order of a series of values (generally numbering the log entries 0, 1, 2, ...). There are many ways to implement this, but the simplest and fastest
+            is with a leader who chooses the ordering of values provided to it. As long as the leader remains alive, all followers need to only copy the values and ordering the leader chooses.
+            <p>
+            Of course if leaders didn't fail we wouldn't need followers! When the leader does die we need to choose a new leader from among the followers. But followers themselves may fall behind or crash so we must ensure we
+            choose an up-to-date follower. The fundamental guarantee a log replication algorithm must provide is that if we tell the client a message is committed, and the leader fails, the new leader we elect must also have
+            that message. This yields a tradeoff: if the leader waits for more followers to acknowledge a message before declaring it committed then there will be more potentially electable leaders.
+            <p>
+            If you choose the number of acknowledgements required and the number of logs that must be compared to elect a leader such that there is guaranteed to be an overlap, then this is called a Quorum.
+            <p>
+            A common approach to this tradeoff is to use a majority vote for both the commit decision and the leader election. This is not what Kafka does, but let's explore it anyway to understand the tradeoffs. Let's say we
+            have 2<i>f</i>+1 replicas. If <i>f</i>+1 replicas must receive a message prior to a commit being declared by the leader, and if we elect a new leader by electing the follower with the most complete log from at least
+            <i>f</i>+1 replicas, then, with no more than <i>f</i> failures, the leader is guaranteed to have all committed messages. This is because among any <i>f</i>+1 replicas, there must be at least one replica that contains
+            all committed messages. That replica's log will be the most complete and therefore will be selected as the new leader. There are many remaining details that each algorithm must handle (such as precisely defined what
+            makes a log more complete, ensuring log consistency during leader failure or changing the set of servers in the replica set) but we will ignore these for now.
+            <p>
+            This majority vote approach has a very nice property: the latency is dependent on only the fastest servers. That is, if the replication factor is three, the latency is determined by the faster follower not the slower one.
+            <p>
+            There are a rich variety of algorithms in this family including ZooKeeper's
+            <a href="https://web.archive.org/web/20140602093727/https://www.stanford.edu/class/cs347/reading/zab.pdf">Zab</a>,
+            <a href="https://www.usenix.org/system/files/conference/atc14/atc14-paper-ongaro.pdf">Raft</a>,
+            and <a href="https://pmg.csail.mit.edu/papers/vr-revisited.pdf">Viewstamped Replication</a>.
+            The most similar academic publication we are aware of to Kafka's actual implementation is
+            <a href="https://research.microsoft.com/apps/pubs/default.aspx?id=66814">PacificA</a> from Microsoft.
+            <p>
+            The downside of majority vote is that it doesn't take many failures to leave you with no electable leaders. To tolerate one failure requires three copies of the data, and to tolerate two failures requires five copies
+            of the data. In our experience having only enough redundancy to tolerate a single failure is not enough for a practical system, but doing every write five times, with 5x the disk space requirements and 1/5th the
+            throughput, is not very practical for large volume data problems. This is likely why quorum algorithms more commonly appear for shared cluster configuration such as ZooKeeper but are less common for primary data
+            storage. For example in HDFS the namenode's high-availability feature is built on a <a href="https://blog.cloudera.com/blog/2012/10/quorum-based-journaling-in-cdh4-1">majority-vote-based journal</a>, but this more
+            expensive approach is not used for the data itself.
+            <p>
+            Kafka takes a slightly different approach to choosing its quorum set. Instead of majority vote, Kafka dynamically maintains a set of in-sync replicas (ISR) that are caught-up to the leader. Only members of this set
+            are eligible for election as leader. A write to a Kafka partition is not considered committed until <i>all</i> in-sync replicas have received the write. This ISR set is persisted in the cluster metadata whenever it changes.
+            Because of this, any replica in the ISR is eligible to be elected leader. This is an important factor for Kafka's usage model where there are many partitions and ensuring leadership balance is important.
+            With this ISR model and <i>f+1</i> replicas, a Kafka topic can tolerate <i>f</i> failures without losing committed messages.
+            <p>
+            For most use cases we hope to handle, we think this tradeoff is a reasonable one. In practice, to tolerate <i>f</i> failures, both the majority vote and the ISR approach will wait for the same number of replicas to
+            acknowledge before committing a message (e.g. to survive one failure a majority quorum needs three replicas and one acknowledgement and the ISR approach requires two replicas and one acknowledgement).
+            The ability to commit without the slowest servers is an advantage of the majority vote approach. However, we think it is ameliorated by allowing the client to choose whether they block on the message commit or not,
+            and the additional throughput and disk space due to the lower required replication factor is worth it.
+            <p>
+            Another important design distinction is that Kafka does not require that crashed nodes recover with all their data intact. It is not uncommon for replication algorithms in this space to depend on the existence of
+            "stable storage" that cannot be lost in any failure-recovery scenario without potential consistency violations. There are two primary problems with this assumption. First, disk errors are the most common problem we
+            observe in real operation of persistent data systems and they often do not leave data intact. Secondly, even if this were not a problem, we do not want to require the use of fsync on every write for our consistency
+            guarantees as this can reduce performance by two to three orders of magnitude. Our protocol for allowing a replica to rejoin the ISR ensures that before rejoining, it must fully re-sync again even if it lost unflushed
+            data in its crash.
+
+<h4><a id="design_uncleanleader" href="#design_uncleanleader">Unclean leader election: What if they all die?</a></h4>
+
+            Note that Kafka's guarantee with respect to data loss is predicated on at least one replica remaining in sync. If all the nodes replicating a partition die, this guarantee no longer holds.
+            <p>
+            However a practical system needs to do something reasonable when all the replicas die. If you are unlucky enough to have this occur, it is important to consider what will happen. There are two behaviors that could be
+            implemented:
+            <ol>
+                <li>Wait for a replica in the ISR to come back to life and choose this replica as the leader (hopefully it still has all its data).
+                <li>Choose the first replica (not necessarily in the ISR) that comes back to life as the leader.
+            </ol>
+            <p>
+            This is a simple tradeoff between availability and consistency. If we wait for replicas in the ISR, then we will remain unavailable as long as those replicas are down. If such replicas were destroyed or their data
+            was lost, then we are permanently down. If, on the other hand, a non-in-sync replica comes back to life and we allow it to become leader, then its log becomes the source of truth even though it is not guaranteed to
+            have every committed message. By default from version 0.11.0.0, Kafka chooses the first strategy and favor waiting for a consistent replica. This behavior can be changed using
+            configuration property <code>unclean.leader.election.enable</code>, to support use cases where uptime is preferable to consistency.
+            <p>
+            This dilemma is not specific to Kafka. It exists in any quorum-based scheme. For example in a majority voting scheme, if a majority of servers suffer a permanent failure, then you must either choose to lose 100% of
+            your data or violate consistency by taking what remains on an existing server as your new source of truth.
 
 
-    <h4 class="anchor-heading"><a id="design_ha" class="anchor-link"></a><a href="#design_ha">Availability and Durability Guarantees</a></h4>
+<h4 class="anchor-heading"><a id="design_ha" class="anchor-link"></a><a href="#design_ha">Availability and Durability Guarantees</a></h4>
 
     When writing to Kafka, producers can choose whether they wait for the message to be acknowledged by 0,1 or all (-1) replicas.
     Note that "acknowledgement by all replicas" does not guarantee that the full set of assigned replicas have received the message. By default, when acks=all, acknowledgement happens as soon as all the current in-sync
@@ -463,7 +470,7 @@
     </ol>
 
 
-    <h4 class="anchor-heading"><a id="design_replicamanagment" class="anchor-link"></a><a href="#design_replicamanagment">Replica Management</a></h4>
+<h4 class="anchor-heading"><a id="design_replicamanagment" class="anchor-link"></a><a href="#design_replicamanagment">Replica Management</a></h4>
 
     The above discussion on replicated logs really covers only a single log, i.e. one topic partition. However a Kafka cluster will manage hundreds or thousands of these partitions. We attempt to balance partitions
     within a cluster in a round-robin fashion to avoid clustering all partitions for high-volume topics on a small number of nodes. Likewise we try to balance leadership so that each node is the leader for a proportional
@@ -475,7 +482,7 @@
     The result is that we are able to batch together many of the required leadership change notifications which makes the election process far cheaper and faster for a large number
     of partitions. If the controller itself fails, then another controller will be elected.
 
-    <h3 class="anchor-heading"><a id="compaction" class="anchor-link"></a><a href="#compaction">4.8 Log Compaction</a></h3>
+<h3 class="anchor-heading"><a id="compaction" class="anchor-link"></a><a href="#compaction">4.8 Log Compaction</a></h3>
 
     Log compaction ensures that Kafka will always retain at least the last known value for each message key within the log of data for a single topic partition.  It addresses use cases and scenarios such as restoring
     state after application crashes or system failure, or reloading caches after application restarts during operational maintenance. Let's dive into these use cases in more detail and then describe how compaction works.
@@ -527,7 +534,7 @@
     Unlike most log-structured storage systems Kafka is built for subscription and organizes data for fast linear reads and writes. Unlike Databus, Kafka acts as a source-of-truth store so it is useful even in
     situations where the upstream data source would not otherwise be replayable.
 
-    <h4 class="anchor-heading"><a id="design_compactionbasics" class="anchor-link"></a><a href="#design_compactionbasics">Log Compaction Basics</a></h4>
+<h4 class="anchor-heading"><a id="design_compactionbasics" class="anchor-link"></a><a href="#design_compactionbasics">Log Compaction Basics</a></h4>
 
     Here is a high-level picture that shows the logical structure of a Kafka log with the offset for each message.
     <p>
@@ -547,7 +554,7 @@
     <p>
     <img class="centered" src="/{{version}}/images/log_compaction.png">
     <p>
-    <h4 class="anchor-heading">
+<h4 class="anchor-heading">
         <a class="anchor-link" id="design_compactionguarantees" href="#design_compactionguarantees"></a>
         <a href="#design_compactionguarantees">What guarantees does log compaction provide</a>?
     </h4>
@@ -564,7 +571,7 @@
     concurrently with reads, it is possible for a consumer to miss delete markers if it lags by more than <code>delete.retention.ms</code>.
     </ol>
 
-    <h4 class="anchor-heading"><a id="design_compactiondetails" class="anchor-link"></a><a href="#design_compactiondetails">Log Compaction Details</a></h4>
+<h4 class="anchor-heading"><a id="design_compactiondetails" class="anchor-link"></a><a href="#design_compactiondetails">Log Compaction Details</a></h4>
 
     Log compaction is handled by the log cleaner, a pool of background threads that recopy log segment files, removing records whose key appears in the head of the log. Each compactor thread works as follows:
     <ol>
@@ -576,7 +583,7 @@
     (assuming 1k messages).
     </ol>
     <p>
-    <h4 class="anchor-heading"><a id="design_compactionconfig" class="anchor-link"></a><a href="#design_compactionconfig">Configuring The Log Cleaner</a></h4>
+<h4 class="anchor-heading"><a id="design_compactionconfig" class="anchor-link"></a><a href="#design_compactionconfig">Configuring The Log Cleaner</a></h4>
 
     The log cleaner is enabled by default. This will start the pool of cleaner threads.
     To enable log cleaning on a particular topic, add the log-specific property
@@ -603,7 +610,7 @@
     <p>
     Further cleaner configurations are described <a href="/documentation.html#brokerconfigs">here</a>.
 
-    <h3 class="anchor-heading"><a id="design_quotas" class="anchor-link"></a><a href="#design_quotas">4.9 Quotas</a></h3>
+<h3 class="anchor-heading"><a id="design_quotas" class="anchor-link"></a><a href="#design_quotas">4.9 Quotas</a></h3>
     <p>
     Kafka cluster has the ability to enforce quotas on requests to control the broker resources used by clients. Two types
     of client quotas can be enforced by Kafka brokers for each group of clients sharing a quota:
@@ -613,7 +620,7 @@
       <li>Request rate quotas define CPU utilization thresholds as a percentage of network and I/O threads (since 0.11)</li>
     </ol>
 
-    <h4 class="anchor-heading">
+<h4 class="anchor-heading">
         <a class="anchor-link" id="design_quotasnecessary" href="#design_quotasnecessary"></a>
         <a href="#design_quotasnecessary">Why are quotas necessary</a>?
     </h4>
@@ -623,7 +630,7 @@
     Having quotas protects against these issues and is all the more important in large multi-tenant clusters where a small set of badly behaved clients can degrade user experience for the well behaved ones.
     In fact, when running Kafka as a service this even makes it possible to enforce API limits according to an agreed upon contract.
     </p>
-    <h4 class="anchor-heading"><a id="design_quotasgroups" class="anchor-link"></a><a href="#design_quotasgroups">Client groups</a></h4>
+<h4 class="anchor-heading"><a id="design_quotasgroups" class="anchor-link"></a><a href="#design_quotasgroups">Client groups</a></h4>
         The identity of Kafka clients is the user principal which represents an authenticated user in a secure cluster. In a cluster that supports unauthenticated clients, user principal is a grouping of unauthenticated
         users
         chosen by the broker using a configurable <code>PrincipalBuilder</code>. Client-id is a logical grouping of clients with a meaningful name chosen by the client application. The tuple (user, client-id) defines
@@ -632,7 +639,7 @@
         Quotas can be applied to (user, client-id), user or client-id groups. For a given connection, the most specific quota matching the connection is applied. All connections of a quota group share the quota configured for the group.
         For example, if (user="test-user", client-id="test-client") has a produce quota of 10MB/sec, this is shared across all producer instances of user "test-user" with the client-id "test-client".
     </p>
-    <h4 class="anchor-heading"><a id="design_quotasconfig" class="anchor-link"></a><a href="#design_quotasconfig">Quota Configuration</a></h4>
+<h4 class="anchor-heading"><a id="design_quotasconfig" class="anchor-link"></a><a href="#design_quotasconfig">Quota Configuration</a></h4>
     <p>
         Quota configuration may be defined for (user, client-id), user and client-id groups. It is possible to override the default quota at any of the quota levels that needs a higher (or even lower) quota.
         The mechanism is similar to the per-topic log config overrides.
@@ -653,14 +660,14 @@
             <li>/config/clients/&lt;client-id&gt;</li>
             <li>/config/clients/&lt;default&gt;</li>
         </ol>
-    <h4 class="anchor-heading"><a id="design_quotasbandwidth" class="anchor-link"></a><a href="#design_quotasbandwidth">Network Bandwidth Quotas</a></h4>
+<h4 class="anchor-heading"><a id="design_quotasbandwidth" class="anchor-link"></a><a href="#design_quotasbandwidth">Network Bandwidth Quotas</a></h4>
     <p>
         Network bandwidth quotas are defined as the byte rate threshold for each group of clients sharing a quota.
         By default, each unique client group receives a fixed quota in bytes/sec as configured by the cluster.
         This quota is defined on a per-broker basis. Each group of clients can publish/fetch a maximum of X bytes/sec
         per broker before clients are throttled.
     </p>
-    <h4 class="anchor-heading"><a id="design_quotascpu" class="anchor-link"></a><a href="#design_quotascpu">Request Rate Quotas</a></h4>
+<h4 class="anchor-heading"><a id="design_quotascpu" class="anchor-link"></a><a href="#design_quotascpu">Request Rate Quotas</a></h4>
     <p>
         Request rate quotas are defined as the percentage of time a client can utilize on request handler I/O
         threads and network threads of each broker within a quota window. A quota of <code>n%</code> represents
@@ -670,7 +677,7 @@
         on the number of cores available on the broker host, request rate quotas represent the total percentage of CPU
         that may be used by each group of clients sharing the quota.
     </p>
-    <h4 class="anchor-heading"><a id="design_quotasenforcement" class="anchor-link"></a><a href="#design_quotasenforcement">Enforcement</a></h4>
+<h4 class="anchor-heading"><a id="design_quotasenforcement" class="anchor-link"></a><a href="#design_quotasenforcement">Enforcement</a></h4>
     <p>
         By default, each unique client group receives a fixed quota as configured by the cluster.
         This quota is defined on a per-broker basis. Each client can utilize this quota per broker before it gets throttled. We decided that defining these quotas per broker is much better than
