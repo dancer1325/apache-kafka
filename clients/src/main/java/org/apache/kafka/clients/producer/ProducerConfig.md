@@ -26,6 +26,37 @@
     * if you enable idempotence -> requires `acks=all`
     * if idempotence is NOT explicitly enabled & `acks!=all` -> idempotence is disabled
 * TODO:
+* `batch.size`
+  * == MAXIMUM batch's size
+    * == NO attempts to batch records / size > this value
+  * allows
+    * 👀if MULTIPLE records want to be sent to the SAME partition -> producer batch records TOGETHER | fewer requests 👀
+      * -> BETTER performance | client & server
+  * units of bytes
+  * requests / sent to brokers -> will contain MULTIPLE batches (1 batch / EACH partition / data ready to be sent)
+  * as smaller -> 
+    * batching LESS common
+    * MAY reduce throughput
+    * if =0 == disable batch size
+  * if it's VERY large -> MAY use memory wastefully
+    * Reason: 🧠Kafka allocate a buffer of the specified batch size in anticipation 🧠
+  * `linger.ms`
+    * := time (in milliseconds) / wait up, BEFORE sending a request
+      * goal
+        * MORE records will arrive / fill up the SAME batch
+    * 👀if currently | partition < `batch.size` -> wait during `linger.ms` 👀
+    * by default, `=0`
+      * 👀== IMMEDIATELY send out a record (ALTHOUGH < `batch.size`) 👀
+    * recommendations
+      * set `>0`
+* `buffer.memory`
+  * == TOTAL bytes of memory / used by the producer to buffer records / waiting to be sent to the server 
+    * 👀if records are sent -- faster than -- they can be delivered to the server -> producer will block for `max.block.ms` 👀
+      * ⚠️AFTERWARD, it will throw an exception ⚠️
+  * 👀== (roughly) TOTAL memory used by the producer 👀
+    * != HARD bound
+      * Reason: 🧠memory used by the producer == memory for buffering + memory for compression (requires enable compression) + memory for maintaining in-flight requests 🧠
+* TODO:
 * `retries`
   * see [CommonClientConfigs](../CommonClientConfigs.md)
   * if >0 & SOME record / sent failed -- with a -- potentially transient error -> client will resend
