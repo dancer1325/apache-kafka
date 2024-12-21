@@ -1,6 +1,7 @@
 * == configuration -- for -- Kafka Producer
 
 * TODO:
+
 * `acks`
   * 👀:= # of acknowledgments / producer requires the leader to have received | BEFORE considering a request complete 👀
     * == controls the durability of records / are sent
@@ -25,7 +26,9 @@
   * idempotence
     * if you enable idempotence -> requires `acks=all`
     * if idempotence is NOT explicitly enabled & `acks!=all` -> idempotence is disabled
+
 * TODO:
+
 * `batch.size`
   * == MAXIMUM batch's size
     * == NO attempts to batch records / size > this value
@@ -49,6 +52,7 @@
       * 👀== IMMEDIATELY send out a record (ALTHOUGH < `batch.size`) 👀
     * recommendations
       * set `>0`
+
 * `buffer.memory`
   * == TOTAL bytes of memory / used by the producer to buffer records / waiting to be sent to the server 
     * 👀if records are sent -- faster than -- they can be delivered to the server -> producer will block for `max.block.ms` 👀
@@ -56,7 +60,12 @@
   * 👀== (roughly) TOTAL memory used by the producer 👀
     * != HARD bound
       * Reason: 🧠memory used by the producer == memory for buffering + memory for compression (requires enable compression) + memory for maintaining in-flight requests 🧠
+
 * TODO:
+
+* `key.serializer`
+  * == key's serializer class / implements `org.apache.kafka.common.serialization.Serializer`
+
 * `retries`
   * see [CommonClientConfigs](../CommonClientConfigs.md)
   * if >0 & SOME record / sent failed -- with a -- potentially transient error -> client will resend
@@ -69,4 +78,10 @@
     * if idempotence is NOT explicitly enabled & `retries<=0` -> idempotence is disabled
   * if you enable it & `enable.idempotence=false` & `MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION>1` -> potentially change the ordering of records
     * Reason: 🧠if 2 batches -- are sent to a -- 1! partition & first fails & retried / second succeeds -> second batch's records MAY appear first 🧠
+
+* TODO:
+
+* `value.serializer`
+  * == value's serializer class / implements `org.apache.kafka.common.serialization.Serializer`
+
 * TODO:
