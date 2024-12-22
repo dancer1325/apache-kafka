@@ -66,6 +66,8 @@
 * `key.serializer`
   * == key's serializer class / implements `org.apache.kafka.common.serialization.Serializer`
 
+* TODO:
+
 * `retries`
   * see [CommonClientConfigs](../CommonClientConfigs.md)
   * if >0 & SOME record / sent failed -- with a -- potentially transient error -> client will resend
@@ -78,6 +80,27 @@
     * if idempotence is NOT explicitly enabled & `retries<=0` -> idempotence is disabled
   * if you enable it & `enable.idempotence=false` & `MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION>1` -> potentially change the ordering of records
     * Reason: 🧠if 2 batches -- are sent to a -- 1! partition & first fails & retried / second succeeds -> second batch's records MAY appear first 🧠
+
+* TODO:
+
+* `transactional.id`
+  * use
+    * transactional delivery
+  * enables reliability semantics (== transaction consistency) / span MULTIPLE producer sessions | 1! producer instance
+    * Reason: 🧠client has the guarantee that transactions / SAME TransactionalId have been completed | prior to starting any NEW transactions 🧠
+  * by default, NO configured
+    * -> producer is limited to idempotent delivery
+  * if `transactional.id` is configured -> `enable.idempotence=true`
+  * use cases
+    * application architecture
+      * distributed (== SEVERAL topic's partitions)
+      * sharded 
+  * if `transactional.id` is specified -> ALL messages sent by the producer -- must be part of a -- transaction
+
+* `transaction.state.log.replication.factor`
+  * == broker setting
+  * by default, `3`
+    * == recommended setting | production
 
 * TODO:
 
