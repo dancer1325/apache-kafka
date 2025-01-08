@@ -6,6 +6,7 @@
     * recommendations
       * include >1 server -- to ensure -- resilience
         * Reason: 🧠if any servers are down 🧠
+        * NORMALLY, 2 or 3 is fine
     * ⚠️NOT need to contain the entire set of brokers ⚠️ 
       * Reason: 🧠Kafka clients automatic and efficiently manage and update connections -- to the -- cluster 🧠 
   * uses
