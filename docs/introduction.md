@@ -1,6 +1,6 @@
 <h4 class="anchor-heading">
     <a class="anchor-link" id="intro_streaming" href="#intro_streaming"></a>
-    <a href="#intro_streaming">What is event streaming?</a>
+    <a href="#intro_streaming"></a>
 </h4>
 
 # What is event streaming?
@@ -26,7 +26,7 @@
 
 <h4 class="anchor-heading">
           <a class="anchor-link" id="intro_usage" href="#intro_usage"></a>
-          <a href="#intro_usage">What can I use event streaming for?</a>
+          <a href="#intro_usage"></a>
 </h4>
 
 # What can I use event streaming for?
@@ -49,7 +49,7 @@
 
 <h4 class="anchor-heading">
                             <a class="anchor-link" id="intro_platform" href="#intro_platform"></a>
-                            <a href="#intro_platform">Apache Kafka&reg; == event streaming platform</a>
+                            <a href="#intro_platform"></a>
 </h4>
 
 # Apache Kafka == event streaming platform
@@ -84,7 +84,7 @@
 
 <h4 class="anchor-heading">
                             <a class="anchor-link" id="intro_nutshell" href="#intro_nutshell"></a>
-                            <a href="#intro_nutshell">How does Kafka work | nutshell?</a>
+                            <a href="#intro_nutshell"></a>
 </h4>
 
 # How does Kafka work | nutshell?
@@ -121,7 +121,7 @@
 
 <h4 class="anchor-heading">
                             <a class="anchor-link" id="intro_concepts_and_terms" href="#intro_concepts_and_terms"></a>
-                            <a href="#intro_concepts_and_terms">Main Concepts and Terminology</a>
+                            <a href="#intro_concepts_and_terms"></a>
 </h4>
 
 # Main Concepts and Terminology
@@ -187,7 +187,7 @@
 
 <h4 class="anchor-heading">
                             <a class="anchor-link" id="intro_apis" href="#intro_apis"></a>
-                            <a href="#intro_apis">Kafka APIs</a>
+                            <a href="#intro_apis"></a>
 </h4>
 
 # Kafka APIs
