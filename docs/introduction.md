@@ -3,6 +3,8 @@
     <a href="#intro_streaming">What is event streaming?</a>
 </h4>
 
+# What is event streaming?
+
 * Event streaming
   * == digital human body's central nervous system
   * uses
@@ -27,6 +29,8 @@
           <a href="#intro_usage">What can I use event streaming for?</a>
 </h4>
 
+# What can I use event streaming for?
+
 * [WIDE use cases](https://kafka.apache.org/powered-by) | DIFFERENT industries & organizations
   * process payments & financial transactions | real-time
     * _Example:_ stock exchanges, banks, and insurances 
@@ -47,6 +51,8 @@
                             <a class="anchor-link" id="intro_platform" href="#intro_platform"></a>
                             <a href="#intro_platform">Apache Kafka&reg; == event streaming platform</a>
 </h4>
+
+# Apache Kafka == event streaming platform
 
 * Kafka
   * 👀== 3 key capabilities, about event streaming, 👀
@@ -80,6 +86,8 @@
                             <a class="anchor-link" id="intro_nutshell" href="#intro_nutshell"></a>
                             <a href="#intro_nutshell">How does Kafka work | nutshell?</a>
 </h4>
+
+# How does Kafka work | nutshell?
 
 * Kafka
   * 👀 servers + clients 👀
@@ -115,6 +123,8 @@
                             <a class="anchor-link" id="intro_concepts_and_terms" href="#intro_concepts_and_terms"></a>
                             <a href="#intro_concepts_and_terms">Main Concepts and Terminology</a>
 </h4>
+
+# Main Concepts and Terminology
 
 * event or record or message
   * goal
@@ -179,6 +189,8 @@
                             <a class="anchor-link" id="intro_apis" href="#intro_apis"></a>
                             <a href="#intro_apis">Kafka APIs</a>
 </h4>
+
+# Kafka APIs
 
 * Kafka CLI
   * uses
