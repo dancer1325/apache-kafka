@@ -1,30 +1,15 @@
-<!--
- Licensed to the Apache Software Foundation (ASF) under one or more
- contributor license agreements.  See the NOTICE file distributed with
- this work for additional information regarding copyright ownership.
- The ASF licenses this file to You under the Apache License, Version 2.0
- (the "License"); you may not use this file except in compliance with
- the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--->
-
-
-# <a href="#quickstart_download">Step 1: Get Kafka</a>
+<a href="#quickstart_download"></a>
+# Step 1: Get Kafka
 
 * <a href="https://www.apache.org/dyn/closer.cgi?path=/kafka/{{fullDotVersion}}/kafka_{{scalaVersion}}-{{fullDotVersion}}.tgz">Download</a> the latest Kafka release
+  * [Example](https://www.apache.org/dyn/closer.cgi?path=/kafka/3.9.0/kafka_2.13-3.9.0.tgz)
 * Extract it
 
 <pre><code class="language-bash">$ tar -xzf kafka_{{scalaVersion}}-{{fullDotVersion}}.tgz
 $ cd kafka_{{scalaVersion}}-{{fullDotVersion}}</code></pre>
 
-# <a href="#quickstart_startserver">Step 2: Start the Kafka environment</a>
+<a href="#quickstart_startserver"></a>
+# Step 2: Start the Kafka environment
 * requirements
   * Java v11+ installed
 * ways to start Kafka 
@@ -75,7 +60,8 @@ $ bin/kafka-server-start.sh config/server.properties</code></pre>
 
     </div>
 
-# <a href="#quickstart_createtopic">Step 3: Create a topic to store your events</a>
+<a href="#quickstart_createtopic"></a>
+# Step 3: Create a topic to store your events
         </h4>
 
         <p>
@@ -110,11 +96,10 @@ Topic: quickstart-events        TopicId: NPmZHyhbR9y00wMglMH2sg PartitionCount: 
 Topic: quickstart-events Partition: 0    Leader: 0   Replicas: 0 Isr: 0</code></pre>
     </div>
 
-    <div class="quickstart-step">
-        <h4 class="anchor-heading">
-            <a class="anchor-link" id="quickstart_send" href="#quickstart_send"></a>
-            <a href="#quickstart_send">Step 4: Write some events into the topic</a>
-        </h4>
+
+<a href="#quickstart_send"></a>
+# Step 4: Write some events into the topic
+
 
         <p>
             A Kafka client communicates with the Kafka brokers via the network for writing (or reading) events.
@@ -134,10 +119,8 @@ Topic: quickstart-events Partition: 0    Leader: 0   Replicas: 0 Isr: 0</code></
         <p>You can stop the producer client with <code>Ctrl-C</code> at any time.</p>
     </div>
 
-    <div class="quickstart-step">
-        <h4 class="anchor-heading">
-            <a class="anchor-link" id="quickstart_consume" href="#quickstart_consume"></a>
-            <a href="#quickstart_consume">Step 5: Read the events</a>
+<a href="#quickstart_consume"></a>
+# Step 5: Read the events
         </h4>
 
         <p>Open another terminal session and run the console consumer client to read the events you just created:</p>
@@ -235,11 +218,9 @@ bar</code></pre>
 
     </div>
 
-    <div class="quickstart-step">
-        <h4 class="anchor-heading">
-            <a class="anchor-link" id="quickstart_kafkastreams" href="#quickstart_kafkastreams"></a>
-            <a href="#quickstart_kafkastreams">Step 7: Process your events with Kafka Streams</a>
-        </h4>
+<a href="#quickstart_kafkastreams"></a>
+# Step 7: Process your events with Kafka Streams
+  
 
         <p>
             Once your data is stored in Kafka as events, you can process the data with the
@@ -271,69 +252,10 @@ wordCounts.toStream().to("output-topic", Produced.with(Serdes.String(), Serdes.L
 
     </div>
 
-    <div class="quickstart-step">
-        <h4 class="anchor-heading">
-            <a class="anchor-link" id="quickstart_kafkaterminate" href="#quickstart_kafkaterminate"></a>
-            <a href="#quickstart_kafkaterminate">Step 8: Terminate the Kafka environment</a>
-        </h4>
+<a href="#quickstart_kafkaterminate"></a>
+# Step 8: Terminate the Kafka environment
 
-        <p>
-            Now that you reached the end of the quickstart, feel free to tear down the Kafka environment—or
-            continue playing around.
-        </p>
-
-        <ol>
-            <li>
-                Stop the producer and consumer clients with <code>Ctrl-C</code>, if you haven't done so already.
-            </li>
-            <li>
-                Stop the Kafka broker with <code>Ctrl-C</code>.
-            </li>
-            <li>
-                Lastly, if the Kafka with ZooKeeper section was followed, stop the ZooKeeper server with <code>Ctrl-C</code>.
-            </li>
-        </ol>
-
-        <p>
-            If you also want to delete any data of your local Kafka environment including any events you have created
-            along the way, run the command:
-        </p>
-
-        <pre><code class="language-bash">$ rm -rf /tmp/kafka-logs /tmp/zookeeper /tmp/kraft-combined-logs</code></pre>
-
-    </div>
-
-    <div class="quickstart-step">
-        <h4 class="anchor-heading">
-            <a class="anchor-link" id="quickstart_kafkacongrats" href="#quickstart_kafkacongrats"></a>
-            <a href="#quickstart_kafkacongrats">Congratulations!</a>
-        </h4>
-
-        <p>You have successfully finished the Apache Kafka quickstart.</p>
-
-        <p>To learn more, we suggest the following next steps:</p>
-
-        <ul>
-            <li>
-                Read through the brief <a href="/intro">Introduction</a>
-                to learn how Kafka works at a high level, its main concepts, and how it compares to other
-                technologies. To understand Kafka in more detail, head over to the
-                <a href="/documentation/">Documentation</a>.
-            </li>
-            <li>
-                Browse through the <a href="/powered-by">Use Cases</a> to learn how
-                other users in our world-wide community are getting value out of Kafka.
-            </li>
-            <!--
-            <li>
-                Learn how _Kafka compares to other technologies_ you might be familiar with.
-                [note to design team: this new page is not yet written]
-            </li>
-            -->
-            <li>
-                Join a <a href="/events">local Kafka meetup group</a> and
-                <a href="https://kafka-summit.org/past-events/">watch talks from Kafka Summit</a>,
-                the main conference of the Kafka community.
-            </li>
-        </ul>
-    </div>
+* `Ctrl-C`
+  * stop the producer, consumer, kafka broker, ZooKeeper or Kraft
+* `rm -rf /tmp/kafka-logs /tmp/zookeeper /tmp/kraft-combined-logs`
+  * delete ANY kafka-data related (EVEN events)
