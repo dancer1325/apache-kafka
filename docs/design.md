@@ -329,7 +329,7 @@
 
 * topic partition
   * == unit of replication
-  * EACH partition -- has -- 1! leader + >=0 followers
+  * 👀1! leader + >=0 followers / EACH partition 👀
     * ALL writes -- go to the -- leader of the partition
     * reads -- can go to the -- leader OR the followers of the partition
   * TYPICALLY, 
