@@ -80,7 +80,7 @@
     Having access to virtually unlimited disk space without any performance penalty means that we can provide some features not usually found in a messaging system. For example, in Kafka, instead of attempting to
     delete messages as soon as they are consumed, we can retain messages for a relatively long period (say a week). This leads to a great deal of flexibility for consumers, as we will describe.
 
-<h3 class="anchor-heading"><a id="maximizingefficiency" class="anchor-link"></a><a href="#maximizingefficiency">4.3 Efficiency</a></h3>
+<h3 class="anchor-heading"><a id="maximizingefficiency" class="anchor-link"></a><a href="#maximizingefficiency"></a></h3>
 # 4.3 Efficiency
     <p>
     We have put significant effort into efficiency. One of our primary use cases is handling web activity data, which is very high volume: each page view may generate dozens of writes. Furthermore, we assume each
@@ -141,7 +141,7 @@
     <p>
     Kafka supports GZIP, Snappy, LZ4 and ZStandard compression protocols. More details on compression can be found <a href="https://cwiki.apache.org/confluence/display/KAFKA/Compression">here</a>.
 
-<h3 class="anchor-heading"><a id="theproducer" class="anchor-link"></a><a href="#theproducer">4.4 The Producer</a></h3>
+<h3 class="anchor-heading"><a id="theproducer" class="anchor-link"></a><a href="#theproducer"></a></h3>
 # 4.4 The Producer
 
 <h4 class="anchor-heading"><a id="design_loadbalancing" class="anchor-link"></a><a href="#design_loadbalancing">Load balancing</a></h4>
@@ -163,7 +163,7 @@
     Details on <a href="#producerconfigs">configuration</a> and the <a href="#producerapi">api</a> for the producer can be found
     elsewhere in the documentation.
 
-<h3 class="anchor-heading"><a id="theconsumer" class="anchor-link"></a><a href="#theconsumer">4.5 The Consumer</a></h3>
+<h3 class="anchor-heading"><a id="theconsumer" class="anchor-link"></a><a href="#theconsumer"></a></h3>
 # 4.5 The Consumer
 
     The Kafka consumer works by issuing "fetch" requests to the brokers leading the partitions it wants to consume. The consumer specifies its offset in the log with each request and receives back a chunk of log
@@ -309,7 +309,7 @@
     offset which makes implementing this feasible (see also <a href="https://kafka.apache.org/documentation/#connect">Kafka Connect</a>). Otherwise, Kafka guarantees at-least-once delivery by default, and allows
     the user to implement at-most-once delivery by disabling retries on the producer and committing offsets in the consumer prior to processing a batch of messages.
 
-<h3 class="anchor-heading"><a id="replication" class="anchor-link"></a><a href="#replication">4.7 Replication</a></h3>
+<h3 class="anchor-heading"><a id="replication" class="anchor-link"></a><a href="#replication"></a></h3>
 # 4.7 Replication
 * 💡log / EACH topic's partitions -- is replicated by Kafka -- ACROSS configurable # of servers 💡
   * if you want -> you can set this replication factor | topic-by-topic basis
@@ -490,7 +490,7 @@
     The result is that we are able to batch together many of the required leadership change notifications which makes the election process far cheaper and faster for a large number
     of partitions. If the controller itself fails, then another controller will be elected.
 
-<h3 class="anchor-heading"><a id="compaction" class="anchor-link"></a><a href="#compaction">4.8 Log Compaction</a></h3>
+<h3 class="anchor-heading"><a id="compaction" class="anchor-link"></a><a href="#compaction"></a></h3>
 # 4.8 Log Compaction
 
     Log compaction ensures that Kafka will always retain at least the last known value for each message key within the log of data for a single topic partition.  It addresses use cases and scenarios such as restoring
@@ -619,7 +619,7 @@
     <p>
     Further cleaner configurations are described <a href="/documentation.html#brokerconfigs">here</a>.
 
-<h3 class="anchor-heading"><a id="design_quotas" class="anchor-link"></a><a href="#design_quotas">4.9 Quotas</a></h3>
+<h3 class="anchor-heading"><a id="design_quotas" class="anchor-link"></a><a href="#design_quotas"></a></h3>
 # 4.9 Quotas
     <p>
     Kafka cluster has the ability to enforce quotas on requests to control the broker resources used by clients. Two types
